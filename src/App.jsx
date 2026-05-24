@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import Sidebar, { type PageKey } from './components/Sidebar'
+import Sidebar from './components/Sidebar'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import MascotasPage from './pages/MascotasPage'
@@ -14,7 +14,7 @@ import { Spinner } from './components/ui'
 
 function Layout() {
   const { user, loading } = useAuth()
-  const [page, setPage] = useState<PageKey>('dashboard')
+  const [page, setPage] = useState('dashboard')
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -23,7 +23,7 @@ function Layout() {
   )
   if (!user) return <LoginPage />
 
-  const pages: Record<PageKey, React.ReactNode> = {
+  const pages = {
     dashboard:      <DashboardPage />,
     citas:          <CitasPage />,
     mascotas:       <MascotasPage />,
@@ -41,7 +41,7 @@ function Layout() {
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       <Sidebar active={page} setPage={setPage} />
       <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto', background: 'var(--surface-raised)', minWidth: 0 }}>
-        {pages[page]}
+        {pages[page] ?? <DashboardPage />}
       </main>
     </div>
   )

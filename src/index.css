@@ -1,93 +1,51 @@
-/* ── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  /* Brand */
-  --ink:       #111827;
-  --ink-soft:  #374151;
-  --ink-muted: #6B7280;
-  --ink-faint: #9CA3AF;
-
-  /* Surface */
-  --surface:       #FFFFFF;
+  --ink:         #111827;
+  --ink-soft:    #374151;
+  --ink-muted:   #6B7280;
+  --ink-faint:   #9CA3AF;
+  --surface:     #FFFFFF;
   --surface-raised: #F9FAFB;
-  --surface-inset: #F3F4F6;
-  --border:        #E5E7EB;
-  --border-soft:   #F3F4F6;
-
-  /* Accent — teal-green (veterinary / health) */
-  --accent:       #0D9488;
-  --accent-light: #CCFBF1;
-  --accent-dark:  #0F766E;
-
-  /* Sidebar */
+  --surface-inset:  #F3F4F6;
+  --border:      #E5E7EB;
+  --border-soft: #F3F4F6;
+  --accent:      #0D9488;
+  --accent-light:#CCFBF1;
+  --accent-dark: #0F766E;
   --sidebar-bg:    #111827;
   --sidebar-hover: #1F2937;
   --sidebar-active:#0D9488;
   --sidebar-text:  #D1D5DB;
   --sidebar-muted: #6B7280;
-
-  /* Status */
   --green:  #059669; --green-bg:  #D1FAE5;
   --yellow: #D97706; --yellow-bg: #FEF3C7;
   --red:    #DC2626; --red-bg:    #FEE2E2;
   --blue:   #2563EB; --blue-bg:   #DBEAFE;
   --gray:   #6B7280; --gray-bg:   #F3F4F6;
   --purple: #7C3AED; --purple-bg: #EDE9FE;
-
-  /* Typography */
   --font-body: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'DM Mono', monospace;
-
-  /* Spacing */
   --sidebar-w: 240px;
   --radius:    10px;
   --radius-sm: 6px;
   --radius-lg: 16px;
-
-  /* Shadow */
   --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
   --shadow-lg: 0 12px 32px rgba(0,0,0,.12);
 }
 
-/* ── Base ───────────────────────────────────────────────────── */
 html { font-size: 15px; -webkit-font-smoothing: antialiased; }
-
-body {
-  font-family: var(--font-body);
-  color: var(--ink);
-  background: var(--surface-raised);
-  line-height: 1.5;
-}
-
+body { font-family: var(--font-body); color: var(--ink); background: var(--surface-raised); line-height: 1.5; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
 input, select, textarea { font-family: inherit; }
 
-/* ── Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
 
-/* ── Animations ────────────────────────────────────────────── */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(.96) translateY(8px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.fade-in  { animation: fadeIn  .25s ease both; }
-.slide-in { animation: slideIn .2s ease both; }
+@keyframes fadeIn  { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+@keyframes modalIn { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+.fade-in { animation: fadeIn .25s ease both; }
