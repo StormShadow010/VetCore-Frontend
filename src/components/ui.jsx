@@ -102,6 +102,8 @@ export function Input({ label, error, allowPattern, maxLength, ...props }) {
   const showErr = touched && error
 
   const handleKeyDown = (e) => {
+    // Permitir repetición solo para Backspace y Delete, bloquear el resto
+    if (e.repeat && e.key !== 'Backspace' && e.key !== 'Delete') { e.preventDefault(); return }
     // Siempre permitir teclas de control y combinaciones con Ctrl/Cmd
     if (CONTROL_KEYS.has(e.key) || e.ctrlKey || e.metaKey) {
       props.onKeyDown?.(e)

@@ -13,6 +13,8 @@ function LoginInput({ label, type = 'text', value, onChange, error, allowPattern
   const [focused, setFocused] = useState(false)
 
   const handleKeyDown = (e) => {
+    // Permitir repetición solo para Backspace y Delete, bloquear el resto
+    if (e.repeat && e.key !== 'Backspace' && e.key !== 'Delete') { e.preventDefault(); return }
     if (CONTROL_KEYS.has(e.key) || e.ctrlKey || e.metaKey) return
     if (allowPattern && !allowPattern.test(e.key)) { e.preventDefault(); return }
     if (maxLength && e.target.value.length >= maxLength) {
