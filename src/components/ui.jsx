@@ -2,13 +2,13 @@ import { useState } from 'react'
 
 /* ── BADGE ───────────────────────────────────────────────────── */
 const BADGE_STYLES = {
-  green:  { bg: 'var(--green-bg)',     color: 'var(--green)'      },
-  yellow: { bg: 'var(--yellow-bg)',    color: 'var(--yellow)'     },
-  red:    { bg: 'var(--red-bg)',       color: 'var(--red)'        },
-  blue:   { bg: 'var(--blue-bg)',      color: 'var(--blue)'       },
-  gray:   { bg: 'var(--gray-bg)',      color: 'var(--gray)'       },
-  purple: { bg: 'var(--purple-bg)',    color: 'var(--purple)'     },
-  teal:   { bg: 'var(--accent-light)', color: 'var(--accent-dark)'},
+  green: { bg: 'var(--green-bg)', color: 'var(--green)' },
+  yellow: { bg: 'var(--yellow-bg)', color: 'var(--yellow)' },
+  red: { bg: 'var(--red-bg)', color: 'var(--red)' },
+  blue: { bg: 'var(--blue-bg)', color: 'var(--blue)' },
+  gray: { bg: 'var(--gray-bg)', color: 'var(--gray)' },
+  purple: { bg: 'var(--purple-bg)', color: 'var(--purple)' },
+  teal: { bg: 'var(--accent-light)', color: 'var(--accent-dark)' },
 }
 
 export const ESTADO_BADGE = {
@@ -34,10 +34,10 @@ export function Badge({ label, variant = 'gray' }) {
 /* ── BUTTON ──────────────────────────────────────────────────── */
 export function Btn({ children, onClick, variant = 'primary', size = 'md', disabled, type = 'button', fullWidth }) {
   const styles = {
-    primary:   { background: 'var(--accent)',        color: '#fff',             border: 'none' },
-    secondary: { background: 'var(--surface-inset)', color: 'var(--ink-soft)',  border: '1px solid var(--border)' },
-    danger:    { background: 'var(--red)',            color: '#fff',             border: 'none' },
-    ghost:     { background: 'transparent',           color: 'var(--ink-muted)', border: '1px solid var(--border)' },
+    primary: { background: 'var(--accent)', color: '#fff', border: 'none' },
+    secondary: { background: 'var(--surface-inset)', color: 'var(--ink-soft)', border: '1px solid var(--border)' },
+    danger: { background: 'var(--red)', color: '#fff', border: 'none' },
+    ghost: { background: 'transparent', color: 'var(--ink-muted)', border: '1px solid var(--border)' },
   }
   return (
     <button type={type} onClick={onClick} disabled={disabled} style={{
@@ -90,11 +90,11 @@ export function StatCard({ label, value, icon, variant = 'teal' }) {
    Ctrl+V, Ctrl+A, etc.) siempre se permiten.
 ────────────────────────────────────────────────────────────── */
 const CONTROL_KEYS = new Set([
-  'Backspace','Delete','Tab','Enter','Escape',
-  'ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
-  'Home','End','PageUp','PageDown',
-  'F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
-  'Shift','Control','Alt','Meta','CapsLock',
+  'Backspace', 'Delete', 'Tab', 'Enter', 'Escape',
+  'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+  'Home', 'End', 'PageUp', 'PageDown',
+  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+  'Shift', 'Control', 'Alt', 'Meta', 'CapsLock',
 ])
 
 export function Input({ label, error, allowPattern, maxLength, ...props }) {
@@ -291,15 +291,15 @@ export function FormCol({ children }) {
 ────────────────────────────────────────────────────────────── */
 export const PATTERNS = {
   // Solo letras (mayúsculas, minúsculas, tildes, ñ) y espacio
-  soloLetras:  /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]$/,
+  soloLetras: /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]$/,
   // Solo dígitos
   soloNumeros: /^\d$/,
   // Letras, números, espacio
-  alfanumerico:/^[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ\s]$/,
+  alfanumerico: /^[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ\s]$/,
   // Número decimal: dígitos y UN punto
-  decimal:     /^[\d.]$/,
+  decimal: /^[\d.]$/,
   // Email: letras, números y caracteres especiales válidos
-  email:       /^[a-zA-Z0-9._%+\-@]$/,
+  email: /^[a-zA-Z0-9._%+\-@]$/,
   // Dirección: letras, números, espacios y # / - .
-  direccion:   /^[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ\s#/\-.]$/,
+  direccion: /^[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ\s#/\-.]$/,
 }

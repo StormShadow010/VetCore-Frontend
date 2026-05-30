@@ -8,9 +8,9 @@ import { PageHeader, Card, Table, Badge, Btn, Modal, Input, Select, SearchInput,
 const EMPTY = { id_mascota: '', id_veterinario: '', fecha_hora: '', motivo: '', observaciones: '' }
 
 const SCHEMA = {
-  id_mascota:     [rules.selectRequerido],
+  id_mascota: [rules.selectRequerido],
   id_veterinario: [rules.selectRequerido],
-  fecha_hora:     [rules.fechaHora],
+  fecha_hora: [rules.fechaHora],
 }
 
 export default function CitasPage() {
@@ -75,9 +75,9 @@ export default function CitasPage() {
               ...(can('USUARIO') ? [
                 c.estado === 'PENDIENTE'
                   ? <div style={{ display: 'flex', gap: 6 }}>
-                      {can('ADMIN') && <Btn size="sm" variant="secondary" onClick={() => cambiarEstado(c.id_cita, 'ATENDIDA')}>Atendida</Btn>}
-                      <Btn size="sm" variant="danger" onClick={() => cambiarEstado(c.id_cita, 'CANCELADA')}>Cancelar</Btn>
-                    </div>
+                    {can('ADMIN') && <Btn size="sm" variant="secondary" onClick={() => cambiarEstado(c.id_cita, 'ATENDIDA')}>Atendida</Btn>}
+                    <Btn size="sm" variant="danger" onClick={() => cambiarEstado(c.id_cita, 'CANCELADA')}>Cancelar</Btn>
+                  </div>
                   : <span style={{ color: 'var(--ink-faint)', fontSize: 12 }}>—</span>
               ] : []),
             ])}

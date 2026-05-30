@@ -1,51 +1,206 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@import "tailwindcss";
+@source "./**/*.{js,jsx,ts,tsx}";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 :root {
-  --ink:         #111827;
-  --ink-soft:    #374151;
-  --ink-muted:   #6B7280;
-  --ink-faint:   #9CA3AF;
-  --surface:     #FFFFFF;
-  --surface-raised: #F9FAFB;
-  --surface-inset:  #F3F4F6;
-  --border:      #E5E7EB;
-  --border-soft: #F3F4F6;
-  --accent:      #0D9488;
-  --accent-light:#CCFBF1;
-  --accent-dark: #0F766E;
-  --sidebar-bg:    #111827;
-  --sidebar-hover: #1F2937;
-  --sidebar-active:#0D9488;
-  --sidebar-text:  #D1D5DB;
-  --sidebar-muted: #6B7280;
-  --green:  #059669; --green-bg:  #D1FAE5;
-  --yellow: #D97706; --yellow-bg: #FEF3C7;
-  --red:    #DC2626; --red-bg:    #FEE2E2;
-  --blue:   #2563EB; --blue-bg:   #DBEAFE;
-  --gray:   #6B7280; --gray-bg:   #F3F4F6;
-  --purple: #7C3AED; --purple-bg: #EDE9FE;
+  --background: #edf2e8;
+  --foreground: #08211b;
+  --primary: #006c4f;
+  --primary-foreground: #ffffff;
+  --secondary: #e2ebd9;
+  --accent: #92b496;
+  --muted: #dfe7db;
+  --border: #c8d4c2;
+  --destructive: #c45c4a;
+  --card: #f4f8f2;
+  
+  --cream: #faf8f5;
+  --sage-light: #e8f0e0;
+  --sage: #b8d4a8;
+  --sage-deep: #006c4f;
+
+  --spacing: 0.25rem;
+  --ink: #08211b;
+  --ink-soft: #233e36;
+  --ink-muted: #4a5c56;
+  --ink-faint: #81948d;
+  --surface: #f4f8f2;
+  --surface-raised: #edf2e8;
+  --surface-inset: #e2ebd9;
+
+  --border-soft: #dce5d8;
+
+  --accent-light: #e2ebd9;
+  --accent-dark: #006c4f;
+  --sidebar-bg: #f4f8f2;
+  --sidebar-hover: #e2ebd9;
+  --sidebar-active: #006c4f;
+  --sidebar-text: #08211b;
+  --sidebar-muted: #4a5c56;
+  --sidebar-border: var(--border);
+  --green: #006c4f;
+  --green-bg: #e2ebd9;
+  --yellow: #d97706;
+  --yellow-bg: #fef3c7;
+  --red: #c45c4a;
+  --red-bg: #fee2e2;
+  --blue: #2563eb;
+  --blue-bg: #dbeafe;
+  --gray: #6b7280;
+  --gray-bg: #f3f4f6;
+  --purple: #7c3aed;
+  --purple-bg: #ede9fe;
+  
+  --login-left-bg: #18251e;
+  --login-left-text: var(--primary-foreground);
+  --login-left-accent: var(--primary);
+  --login-left-muted: rgba(255, 255, 255, 0.75);
+
   --font-body: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'DM Mono', monospace;
   --sidebar-w: 240px;
-  --radius:    10px;
+  --radius: 10px;
   --radius-sm: 6px;
   --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,.12);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .08);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, .12);
 }
 
-html { font-size: 15px; -webkit-font-smoothing: antialiased; }
-body { font-family: var(--font-body); color: var(--ink); background: var(--surface-raised); line-height: 1.5; }
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; }
-input, select, textarea { font-family: inherit; }
+[data-theme="dark"] {
+  --background: #1a2622;
+  --foreground: #e2ebd9;
+  --primary: #008f68;
+  --primary-foreground: #1a2622;
+  --secondary: #2d3d37;
+  --accent: #006c4f;
+  --muted: #22302b;
+  --border: rgba(255,255,255,0.08);
+  --destructive: #c45c4a;
+  --card: #22302b;
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  --cream: #1a2622;
+  --sage-light: #2d3d37;
+  --sage: #006c4f;
+  --sage-deep: #008f68;
 
-@keyframes fadeIn  { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-@keyframes modalIn { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
-@keyframes spin    { to { transform: rotate(360deg); } }
-.fade-in { animation: fadeIn .25s ease both; }
+  --ink: #e2ebd9;
+  --ink-soft: #c8d4c2;
+  --ink-muted: #92a39b;
+  --ink-faint: #60736b;
+  --surface: #22302b;
+  --surface-raised: #1a2622;
+  --surface-inset: #2d3d37;
+
+  --border-soft: rgba(255,255,255,0.04);
+
+  --accent-light: #2d3d37;
+  --accent-dark: #008f68;
+  --sidebar-bg: #121a17;
+  --sidebar-hover: #22302b;
+  --sidebar-active: #008f68;
+  --sidebar-text: #e2ebd9;
+  --sidebar-muted: #8ba092;
+  --sidebar-border: rgba(255,255,255,0.08);
+  --green: #008f68;
+  --green-bg: rgba(0, 143, 104, 0.15);
+  --red: #c45c4a;
+  --red-bg: rgba(196, 92, 74, 0.15);
+  --yellow: #d97706;
+  --yellow-bg: rgba(217, 119, 6, 0.15);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59, 130, 246, 0.15);
+  --purple: #a78bfa;
+  --purple-bg: rgba(167, 139, 250, 0.15);
+  
+  --login-left-bg: var(--secondary);
+  --login-left-text: var(--foreground);
+  --login-left-accent: var(--primary);
+  --login-left-muted: rgba(226, 235, 217, 0.6);
+}
+
+/* Transition for smooth theme switching */
+body, input, select, textarea, button, header, aside, main, div, span, label, h1, h2, h3, p, a {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html {
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--surface-raised);
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(.96) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-in {
+  animation: fadeIn .25s ease both;
+}

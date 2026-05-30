@@ -31,13 +31,13 @@ export default function Sidebar({ active, setPage }) {
   if (cur.length) sections.push({ title: curTitle, items: cur })
 
   return (
-    <aside style={{ width: 'var(--sidebar-w)', background: 'var(--sidebar-bg)', display: 'flex', flexDirection: 'column', minHeight: '100vh', flexShrink: 0, borderRight: '1px solid #1F2937' }}>
+    <aside style={{ width: 'var(--sidebar-w)', background: 'var(--sidebar-bg)', display: 'flex', flexDirection: 'column', minHeight: '100vh', flexShrink: 0, borderRight: '1px solid var(--sidebar-border)' }}>
       {/* Logo */}
-      <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid #1F2937' }}>
+      <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid var(--sidebar-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 34, height: 34, background: 'var(--accent)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🐾</div>
+          <div style={{ width: 34, height: 34, background: 'var(--accent)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: '#fff' }}>🐾</div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: 15, color: '#F9FAFB' }}>VetCore</div>
+            <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--sidebar-text)' }}>VetCore</div>
             <div style={{ fontSize: 10, color: 'var(--sidebar-muted)', letterSpacing: '.3px', textTransform: 'uppercase' }}>Clínica</div>
           </div>
         </div>
@@ -74,19 +74,19 @@ export default function Sidebar({ active, setPage }) {
       </nav>
 
       {/* User */}
-      <div style={{ padding: '14px 16px', borderTop: '1px solid #1F2937' }}>
+      <div style={{ padding: '14px 16px', borderTop: '1px solid var(--sidebar-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
             {user?.username?.[0]?.toUpperCase()}
           </div>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#F9FAFB', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.username}</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sidebar-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.username}</div>
             <Badge label={user?.rol ?? ''} variant={ROL_BADGE[user?.rol] ?? 'gray'} />
           </div>
         </div>
-        <button onClick={logout} style={{ width: '100%', background: '#1F2937', border: 'none', color: 'var(--sidebar-muted)', borderRadius: 8, padding: '7px', fontSize: 12, cursor: 'pointer', transition: 'background .15s' }}
-          onMouseEnter={e => (e.target.style.background = '#374151')}
-          onMouseLeave={e => (e.target.style.background = '#1F2937')}
+        <button onClick={logout} style={{ width: '100%', background: 'var(--muted)', border: '1px solid var(--sidebar-border)', color: 'var(--sidebar-text)', borderRadius: 8, padding: '7px', fontSize: 12, cursor: 'pointer', transition: 'background .15s' }}
+          onMouseEnter={e => (e.target.style.background = 'var(--sidebar-hover)')}
+          onMouseLeave={e => (e.target.style.background = 'var(--muted)')}
         >Cerrar sesión</button>
       </div>
     </aside>
