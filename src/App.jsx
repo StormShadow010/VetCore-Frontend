@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Sidebar from './components/Sidebar'
@@ -75,6 +75,38 @@ function LoginWrapper() {
   return <LoginPage />
 }
 
+// ── Theme toggle global ──────────────────────────────────────
+function ThemeToggle() {
+  const [dark, setDark] = useState(() =>
+    localStorage.getItem('vetcore_theme') === 'dark' ||
+    (!localStorage.getItem('vetcore_theme') &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
+  )
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : '')
+    localStorage.setItem('vetcore_theme', dark ? 'dark' : 'light')
+  }, [dark])
+
+  return (
+    <button
+      onClick={() => setDark(d => !d)}
+      title={dark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+      style={{
+        position: 'fixed', bottom: 20, right: 20, zIndex: 9998,
+        width: 44, height: 44, borderRadius: '50%',
+        background: 'var(--surface)', border: '1px solid var(--border)',
+        boxShadow: '0 2px 12px rgba(0,0,0,.18)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 20, cursor: 'pointer', transition: 'background .2s, box-shadow .2s',
+      }}
+      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,.28)')}
+      onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,.18)')}
+    >
+      {dark ? '☀️' : '🌙'}
+    </button>
+  )
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -102,6 +134,7 @@ export default function App() {
         </Routes>
       </Router>
       <ToastContainer position="top-right" autoClose={3000} />
+      <ThemeToggle />
     </AuthProvider>
   )
 }

@@ -6,7 +6,7 @@ import Footer from "../components/public/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#f4f3ea]">
+    <div style={{ minHeight: "100vh", background: "var(--background)" }}>
       <Navbar />
       <Hero />
       <CTA />

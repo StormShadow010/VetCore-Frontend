@@ -5,7 +5,7 @@ import Footer from "../components/public/Footer";
 
 export default function ServiciosPage() {
   return (
-    <div className="w-full min-h-screen bg-[#f4f3ea] block">
+    <div style={{ width: "100%", minHeight: "100vh", background: "var(--background)" }}>
       <Navbar />
       <Servicios />
       <Footer />

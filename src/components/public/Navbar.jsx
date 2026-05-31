@@ -1,56 +1,76 @@
-import React from 'react';
-import { PawPrint } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { PawPrint } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function Navbar() {
   return (
-    <nav className="w-full bg-[#f4f3ea] shadow-sm">
-      <div className="max-w-7xl mx-auto w-full flex items-center justify-between px-8 py-4">
-        
-        {/* 1. SECCIÓN IZQUIERDA: LOGO Y NOMBRE */}
-        <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-700 text-white">
-            <PawPrint className="w-5 h-5" />
+    <nav style={{
+      width: '100%',
+      background: 'var(--background)',
+      borderBottom: '1px solid var(--border)',
+      boxShadow: '0 1px 3px rgba(0,0,0,.06)',
+      transition: 'background .25s, border-color .25s',
+    }}>
+      <div style={{
+        maxWidth: 1280, margin: '0 auto',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '14px 32px',
+      }}>
+
+        {/* Logo */}
+        <Link to="/" style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          textDecoration: 'none', opacity: 1, transition: 'opacity .15s',
+        }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = '.8')}
+          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+        >
+          <div style={{
+            width: 38, height: 38, borderRadius: '50%',
+            background: '#059669', display: 'flex',
+            alignItems: 'center', justifyContent: 'center',
+          }}>
+            <PawPrint size={18} color="#fff" />
           </div>
-          <span className="text-xl font-bold text-gray-800">Huellitas</span>
+          <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--foreground)' }}>
+            Huellitas
+          </span>
         </Link>
 
-        {/* 2. SECCIÓN CENTRAL: ENLACES DE NAVEGACIÓN LIMPIOS */}
-        <div className="flex items-center gap-8">
-          <Link 
-            to="/" 
-            className="font-medium text-gray-600 hover:text-emerald-700 transition-colors"
-          >
-            Inicio
-          </Link>
-          
-          <Link 
-            to="/servicios" 
-            className="font-medium text-gray-600 hover:text-emerald-700 transition-colors"
-          >
-            Servicios
-          </Link>
-          
-          <Link 
-            to="/contacto" 
-            className="font-medium text-gray-600 hover:text-emerald-700 transition-colors"
-          >
-            Contacto
-          </Link>
+        {/* Links centrales */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          {[['/', 'Inicio'], ['/servicios', 'Servicios'], ['/contacto', 'Contacto']].map(([to, label]) => (
+            <Link key={to} to={to} style={{
+              fontWeight: 500, fontSize: 14,
+              color: 'var(--ink-soft)',
+              textDecoration: 'none', transition: 'color .15s',
+            }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#059669')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-soft)')}
+            >{label}</Link>
+          ))}
         </div>
 
-        {/* 3. SECCIÓN DERECHA: BOTONES DE ACCIÓN CORREGIDOS */}
-        <div className="flex items-center gap-6">
-          <Link 
-            to="/login" 
-            className="font-medium text-gray-700 hover:text-emerald-700 transition-colors"
+        {/* Acciones derecha */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <Link to="/login" style={{
+            fontWeight: 500, fontSize: 14,
+            color: 'var(--ink)', textDecoration: 'none', transition: 'color .15s',
+          }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#059669')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink)')}
           >
             Iniciar sesión
           </Link>
-          
-          <Link 
-            to="/registro" 
-            className="px-6 py-2.5 rounded-full bg-emerald-700 text-white font-medium hover:bg-emerald-800 transition-all shadow-sm block text-center shrink-0"
+          <Link to="/registro" style={{
+            padding: '9px 22px', borderRadius: 99,
+            background: '#059669', color: '#fff',
+            fontWeight: 600, fontSize: 14,
+            textDecoration: 'none', transition: 'background .15s',
+            boxShadow: '0 2px 8px rgba(5,150,105,.25)',
+          }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#047857')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#059669')}
           >
             Registrarse
           </Link>
@@ -58,5 +78,5 @@ export default function Navbar() {
 
       </div>
     </nav>
-  );
+  )
 }

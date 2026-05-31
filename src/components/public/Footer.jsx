@@ -3,8 +3,8 @@ import { PawPrint } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#f4f3ea] py-8 border-t border-gray-200/50">
-      <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-600 font-medium px-8 md:px-16">
+    <footer className="w-full bg-[var(--background)] py-8 border-t border-[var(--border)]/50">
+      <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--ink-soft)] font-medium px-8 md:px-16">
         
         {/* SECCIÓN IZQUIERDA */}
         <div className="flex items-center gap-2">

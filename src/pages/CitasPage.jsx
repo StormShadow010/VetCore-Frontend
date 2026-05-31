@@ -6,26 +6,44 @@ import { validate, rules } from '../services/validation'
 import { PageHeader, Card, Table, Badge, Btn, Modal, Input, Select, SearchInput, Spinner, Alert, ESTADO_BADGE } from '../components/ui'
 
 const EMPTY = { id_mascota: '', id_veterinario: '', fecha_hora: '', motivo: '', observaciones: '' }
-
 const SCHEMA = {
-  id_mascota: [rules.selectRequerido],
+  id_mascota:     [rules.selectRequerido],
   id_veterinario: [rules.selectRequerido],
-  fecha_hora: [rules.fechaHora],
+  fecha_hora:     [rules.fechaHora],
 }
 
 export default function CitasPage() {
-  const { can } = useAuth()
-  const [estado, setEstado] = useState('')
-  const [search, setSearch] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [apiError, setApiError] = useState('')
-  const [form, setForm] = useState({ ...EMPTY })
-  const [errors, setErrors] = useState({})
+  const { user } = useAuth()
+  const rol      = user?.rol ?? 'CONSULTA'
+  const isSuper  = rol === 'SUPERADMIN'
+  const isAdmin  = rol === 'ADMIN' || isSuper
+  const isUsuario = rol === 'USUARIO'
+  // CONSULTA puede ver pero no hacer nada
+  const canWrite = isAdmin || isUsuario
 
-  const { data: citas, loading, refetch } = useFetch(`/citas${estado ? `?estado=${estado}` : ''}`, [estado])
-  const { data: mascotas } = useFetch('/mascotas')
-  const { data: veterinarios } = useFetch('/veterinarios')
+  const [estado,    setEstado]    = useState('')
+  const [search,    setSearch]    = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [saving,    setSaving]    = useState(false)
+  const [apiError,  setApiError]  = useState('')
+  const [form,      setForm]      = useState({ ...EMPTY })
+  const [errors,    setErrors]    = useState({})
+  const [submitted, setSubmitted] = useState(false)
+
+  // USUARIO → solo sus citas (filtramos por id_propietario del usuario si existe)
+  // El backend necesita soporte para filtrar por propietario — usamos id del usuario
+  const buildUrl = () => {
+    const p = new URLSearchParams()
+    if (estado)   p.set('estado', estado)
+    // Para USUARIO: el backend filtra por id del usuario autenticado con ?mis_citas=true
+    if (isUsuario) p.set('mis_citas', 'true')
+    const q = p.toString()
+    return `/citas${q ? `?${q}` : ''}`
+  }
+
+  const { data: citas,       loading,  refetch }   = useFetch(buildUrl(), [estado, rol])
+  const { data: mascotas } = useFetch(isUsuario ? '/mascotas?activa=true&mis_mascotas=true' : '/mascotas?activa=true')
+  const { data: veterinarios }                      = useFetch('/veterinarios')
 
   const set = (k, v) => { setForm(f => ({ ...f, [k]: v })); setErrors(e => ({ ...e, [k]: '' })) }
 
@@ -41,6 +59,7 @@ export default function CitasPage() {
   }
 
   const handleCreate = async () => {
+    setSubmitted(true)
     const errs = validate(form, SCHEMA)
     if (Object.keys(errs).length) { setErrors(errs); return }
     setSaving(true); setApiError('')
@@ -53,32 +72,45 @@ export default function CitasPage() {
 
   return (
     <div className="fade-in">
-      <PageHeader title="Citas Médicas" action={
+      <PageHeader title={isUsuario ? 'Mis Citas' : 'Citas Médicas'} action={
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <SearchInput value={search} onChange={setSearch} placeholder="Mascota, propietario…" />
-          <select value={estado} onChange={e => setEstado(e.target.value)} style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '8px 11px', fontSize: 13, outline: 'none', background: 'var(--surface)', color: 'var(--ink)' }}>
+          {!isUsuario && <SearchInput value={search} onChange={setSearch} placeholder="Mascota, propietario…" />}
+          <select value={estado} onChange={e => setEstado(e.target.value)}
+            style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '8px 11px', fontSize: 13, outline: 'none', background: 'var(--surface)', color: 'var(--ink)' }}>
             <option value="">Todos los estados</option>
-            {['PENDIENTE', 'ATENDIDA', 'CANCELADA', 'NO_ASISTIO'].map(s => <option key={s} value={s}>{s}</option>)}
+            {['PENDIENTE','ATENDIDA','CANCELADA','NO_ASISTIO'].map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          {can('USUARIO') && <Btn onClick={() => { setErrors({}); setApiError(''); setShowModal(true) }}>+ Nueva cita</Btn>}
+          {canWrite && (
+            <Btn onClick={() => { setErrors({}); setApiError(''); setSubmitted(false); setShowModal(true) }}>+ Nueva cita</Btn>
+          )}
         </div>
       } />
+
       <Card>
         {loading ? <Spinner /> : (
           <Table
-            headers={['Fecha', 'Mascota', 'Especie', 'Propietario', 'Tel.', 'Veterinario', 'Motivo', 'Estado', ...(can('USUARIO') ? ['Acción'] : [])]}
+            headers={[
+              'Fecha', 'Mascota', 'Especie',
+              ...(isUsuario ? [] : ['Propietario', 'Tel.']),
+              'Veterinario', 'Motivo', 'Estado',
+              ...(canWrite ? ['Acción'] : []),
+            ]}
             rows={filtered.map(c => [
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>{new Date(c.fecha_hora).toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' })}</span>,
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>
+                {new Date(c.fecha_hora).toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' })}
+              </span>,
               <strong>{c.mascota_nombre}</strong>,
-              c.especie_nombre, c.propietario_nombre, c.propietario_telefono ?? '—', c.veterinario_nombre, c.motivo ?? '—',
+              c.especie_nombre,
+              ...(isUsuario ? [] : [c.propietario_nombre, c.propietario_telefono ?? '—']),
+              c.veterinario_nombre, c.motivo ?? '—',
               <Badge label={c.estado} variant={ESTADO_BADGE[c.estado] ?? 'gray'} />,
-              ...(can('USUARIO') ? [
+              ...(canWrite ? [
                 c.estado === 'PENDIENTE'
-                  ? <div style={{ display: 'flex', gap: 6 }}>
-                    {can('ADMIN') && <Btn size="sm" variant="secondary" onClick={() => cambiarEstado(c.id_cita, 'ATENDIDA')}>Atendida</Btn>}
-                    <Btn size="sm" variant="danger" onClick={() => cambiarEstado(c.id_cita, 'CANCELADA')}>Cancelar</Btn>
-                  </div>
-                  : <span style={{ color: 'var(--ink-faint)', fontSize: 12 }}>—</span>
+                  ? <div style={{ display: 'flex', gap: 4 }}>
+                      {isAdmin && <Btn size="sm" variant="secondary" onClick={() => cambiarEstado(c.id_cita, 'ATENDIDA')}>Atendida</Btn>}
+                      <Btn size="sm" variant="danger" onClick={() => cambiarEstado(c.id_cita, 'CANCELADA')}>Cancelar</Btn>
+                    </div>
+                  : <span style={{ color: 'var(--ink-faint)', fontSize: 12 }}>—</span>,
               ] : []),
             ])}
           />
@@ -97,17 +129,8 @@ export default function CitasPage() {
               {(veterinarios ?? []).map(v => <option key={v.id_veterinario} value={v.id_veterinario}>{v.nombres} {v.apellidos} — {v.especialidad_nombre}</option>)}
             </Select>
             <Input label="Fecha y hora *" type="datetime-local" value={form.fecha_hora} error={errors.fecha_hora} onChange={e => set('fecha_hora', e.target.value)} />
-            <Input label="Motivo"
-              value={form.motivo}
-              onChange={e => set('motivo', e.target.value)}
-              placeholder="Vacunación, revisión general…"
-              maxLength={200}
-            />
-            <Input label="Observaciones"
-              value={form.observaciones}
-              onChange={e => set('observaciones', e.target.value)}
-              maxLength={500}
-            />
+            <Input label="Motivo" value={form.motivo} maxLength={200} onChange={e => set('motivo', e.target.value)} placeholder="Vacunación, revisión general…" />
+            <Input label="Observaciones" value={form.observaciones} maxLength={500} onChange={e => set('observaciones', e.target.value)} />
             {apiError && <Alert message={apiError} />}
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 4 }}>
               <Btn variant="ghost" onClick={() => setShowModal(false)}>Cancelar</Btn>

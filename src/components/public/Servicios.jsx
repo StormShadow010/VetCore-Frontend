@@ -73,7 +73,7 @@ export default function Servicios() {
   ];
 
   return (
-    <section className="w-full bg-[#f4f3ea] px-8 md:px-16 py-16">
+    <section style={{ width:"100%", background:"var(--background)", padding:"4rem 4rem" }}>
       <div className="max-w-7xl mx-auto flex flex-col gap-12">
         
         {/* CABECERA DE LA SECCIÓN */}
@@ -83,10 +83,10 @@ export default function Servicios() {
               Servicios
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-[var(--foreground)] tracking-tight">
             Todo lo que tu mascota necesita
           </h1>
-          <p className="text-lg text-gray-600 font-medium">
+          <p className="text-lg text-[var(--ink-soft)] font-medium">
             Atención profesional, cálida y centrada en el bienestar animal.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function Servicios() {
           {listaServicios.map((servicio) => (
             <div 
               key={servicio.id} 
-              className="bg-[#fafaf6] border border-gray-200/60 rounded-[32px] p-8 flex flex-col gap-5 justify-between shadow-sm hover:shadow-md transition-all duration-200"
+              className="bg-[var(--surface)] border border-[var(--border)]/60 rounded-[32px] p-8 flex flex-col gap-5 justify-between shadow-sm hover:shadow-md transition-all duration-200"
             >
               <div className="flex flex-col gap-4">
                 {/* Contenedor circular del icono */}
@@ -104,13 +104,13 @@ export default function Servicios() {
                   {servicio.icono}
                 </div>
                 {/* Título y Descripción */}
-                <h3 className="text-xl font-bold text-gray-800">{servicio.titulo}</h3>
-                <p className="text-gray-600 text-base font-medium leading-relaxed">{servicio.descripcion}</p>
+                <h3 className="text-xl font-bold text-[var(--foreground)]">{servicio.titulo}</h3>
+                <p className="text-[var(--ink-soft)] text-base font-medium leading-relaxed">{servicio.descripcion}</p>
               </div>
               
               {/* Separador sutil y Precio */}
               <div className="flex flex-col gap-4 mt-2">
-                <hr className="border-gray-200/70" />
+                <hr className="border-[var(--border)]/70" />
                 <span className="text-[#4c6a52] font-semibold text-sm tracking-wide">
                   {servicio.precio}
                 </span>

@@ -17,14 +17,14 @@ export default function CTA() {
         <div className="flex flex-wrap gap-4 justify-center mt-4">
           <Link
             to="/registro"
-            className="px-8 py-3.5 rounded-full bg-[#fafaf6] text-gray-800 font-semibold hover:bg-gray-100 transition-all shadow-sm block text-center"
+            className="px-8 py-3.5 rounded-full bg-[var(--surface)] text-[var(--foreground)] font-semibold hover:bg-[var(--surface-inset)] transition-all shadow-sm block text-center"
           >
             Crear cuenta
           </Link>
           
           <Link 
             to="/contacto" 
-            className="px-8 py-3.5 rounded-full border border-white/40 text-white font-semibold hover:bg-white/10 transition-all block text-center"
+            className="px-8 py-3.5 rounded-full border border-white/40 text-white font-semibold hover:bg-[var(--surface)]/10 transition-all block text-center"
           >
             Contáctanos
           </Link>
