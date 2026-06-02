@@ -68,7 +68,8 @@ export default function RegistroForm() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
     try {
-      const res = await fetch('/api/v1/auth/register', {
+      const BASE = import.meta.env.VITE_API_URL ?? '/api/v1'
+      const res = await fetch(`${BASE}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

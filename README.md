@@ -1,6 +1,6 @@
 # 🐾 VetCore — Frontend
 
-Aplicación web desarrollada en **React JS + Vite**, sin librerías de componentes externas.
+Aplicación web desarrollada en **React JS + Vite** para el sistema de gestión de clínica veterinaria VetCore.
 
 ---
 
@@ -11,78 +11,63 @@ Aplicación web desarrollada en **React JS + Vite**, sin librerías de component
 3. [Instalación y ejecución](#3-instalación-y-ejecución)
 4. [Variables de entorno](#4-variables-de-entorno)
 5. [Páginas y módulos](#5-páginas-y-módulos)
-6. [Roles y permisos](#6-roles-y-permisos)
+6. [Sistema de roles y permisos](#6-sistema-de-roles-y-permisos)
 7. [Usuarios de prueba](#7-usuarios-de-prueba)
 8. [Validaciones de formularios](#8-validaciones-de-formularios)
-9. [Sistema de temas](#9-sistema-de-temas)
+9. [Consultas SQL](#9-consultas-sql)
 10. [Componentes reutilizables](#10-componentes-reutilizables)
-11. [Consultas SQL](#11-consultas-sql)
 
 ---
 
 ## 1. Tecnologías
 
-| Herramienta      | Versión | Uso                                 |
-| ---------------- | ------- | ----------------------------------- |
-| React JS         | 18.x    | Librería de UI                      |
-| Vite             | 5.x     | Bundler y servidor de desarrollo    |
-| React Router DOM | 7.x     | Enrutamiento                        |
-| Tailwind CSS     | 4.x     | Estilos en páginas públicas         |
-| CSS Variables    | —       | Design tokens y temas del dashboard |
-| Context API      | —       | Estado global de autenticación      |
-| Fetch API        | —       | Comunicación con el backend         |
+| Herramienta   | Versión | Uso                              |
+| ------------- | ------- | -------------------------------- |
+| React JS      | 18.x    | Librería de UI                   |
+| Vite          | 5.x     | Bundler y servidor de desarrollo |
+| CSS Variables | —       | Design tokens y estilos globales |
+| Context API   | —       | Estado global de autenticación   |
+| Fetch API     | —       | Comunicación con el backend      |
 
-No se usa ninguna librería externa de componentes (sin Bootstrap, sin MUI, sin shadcn en el dashboard).
+No se usa ninguna librería externa de componentes ni de estilos (sin Tailwind, sin MUI, sin Bootstrap).
 
 ---
 
 ## 2. Estructura del proyecto
 
 ```
-vetcore-frontend/
+vetcore-frontend-js/
 ├── index.html
-├── vite.config.js              ← proxy /api → localhost:5000
+├── vite.config.js           ← proxy /api → localhost:5000
 ├── package.json
-├── .env
+├── .env                     ← VITE_API_URL
 └── src/
-    ├── main.jsx
-    ├── App.jsx                 ← router principal + ThemeToggle global
-    ├── index.css               ← design tokens CSS (variables de tema)
+    ├── main.jsx             ← entry point
+    ├── App.jsx              ← layout principal + router por estado
+    ├── index.css            ← design tokens CSS (variables globales)
     │
     ├── components/
-    │   ├── ui.jsx              ← todos los componentes del dashboard
-    │   ├── Sidebar.jsx         ← navegación lateral por rol
-    │   └── public/
-    │       ├── Navbar.jsx      ← navegación pública (home, servicios, contacto)
-    │       ├── Hero.jsx
-    │       ├── Servicios.jsx
-    │       ├── CTA.jsx
-    │       ├── Footer.jsx
-    │       ├── ContactoInfo.jsx
-    │       └── RegistroForm.jsx
+    │   ├── ui.jsx           ← todos los componentes reutilizables
+    │   └── Sidebar.jsx      ← navegación lateral filtrada por rol
     │
     ├── context/
-    │   └── AuthContext.jsx     ← JWT, user, login, logout, can(rol)
+    │   └── AuthContext.jsx  ← JWT, usuario, login, logout, can(rol)
     │
     ├── hooks/
-    │   └── useFetch.js         ← hook GET con loading/error/refetch por tick
+    │   └── useFetch.js      ← hook genérico para peticiones GET
     │
     ├── services/
-    │   ├── api.js              ← fetch centralizado con JWT automático
-    │   └── validation.js       ← reglas de validación y patrones
+    │   ├── api.js           ← fetch centralizado con JWT automático
+    │   └── validation.js    ← reglas y patrones de validación
     │
     └── pages/
         ├── LoginPage.jsx
-        ├── DashboardPage.jsx   ← estadísticas personalizadas por rol
+        ├── DashboardPage.jsx
         ├── MascotasPage.jsx
         ├── CitasPage.jsx
         ├── PropietariosPage.jsx
-        ├── Home.jsx
-        ├── ServiciosPage.jsx
-        ├── ContactoPage.jsx
-        ├── RegistroPage.jsx
-        └── OtherPages.jsx      ← Veterinarios, Especialidades, Especies,
-                                   Medicamentos, Facturas, Usuarios, SQL
+        └── OtherPages.jsx   ← Veterinarios, Especialidades, Especies,
+                                Medicamentos, Facturas, Usuarios, SQL
 ```
 
 ---
@@ -90,116 +75,92 @@ vetcore-frontend/
 ## 3. Instalación y ejecución
 
 ```bash
-cd vetcore-frontend
+# 1. Instalar dependencias
 npm install
 
-# Desarrollo
+# 2. Crear el archivo de variables de entorno
+cp .env.example .env
+# Editar VITE_API_URL con la URL del backend
+
+# 3. Correr en desarrollo
 npm run dev
 # → http://localhost:5173
 
-# Build producción
+# 4. Build para producción
 npm run build
 
-# Previsualizar build
+# 5. Previsualizar el build
 npm run preview
 ```
 
-> El `vite.config.js` tiene un proxy: peticiones a `/api` se redirigen a `http://localhost:5000`, evitando problemas de CORS en desarrollo.
+> El `vite.config.js` tiene un proxy configurado: peticiones a `/api` se redirigen automáticamente a `http://localhost:5000`, por lo que no hay problemas de CORS en desarrollo.
 
 ---
 
 ## 4. Variables de entorno
 
+Crear un archivo `.env` en la raíz del proyecto:
+
 ```env
 VITE_API_URL=http://localhost:5000/api/v1
 ```
 
-Si el backend corre en otro puerto, actualizar este valor **y** el proxy en `vite.config.js`:
+Si el backend corre en otro puerto, actualizar este valor. El proxy en `vite.config.js` también debe actualizarse:
 
 ```js
+// vite.config.js
 proxy: {
-  '/api': { target: 'http://localhost:5000', changeOrigin: true }
-}
+  '/api': {
+    target: 'http://localhost:5000', // ← cambiar aquí también
+    changeOrigin: true,
+  },
+},
 ```
 
 ---
 
 ## 5. Páginas y módulos
 
-### Páginas públicas (sin autenticación)
-
-| Ruta         | Página        | Descripción                                         |
-| ------------ | ------------- | --------------------------------------------------- |
-| `/`          | Home          | Landing page con Hero, Servicios y CTA              |
-| `/servicios` | ServiciosPage | Catálogo de servicios de la clínica                 |
-| `/contacto`  | ContactoPage  | Información de contacto                             |
-| `/registro`  | RegistroPage  | Formulario de registro (crea usuario + propietario) |
-| `/login`     | LoginPage     | Inicio de sesión con cuentas de demo                |
-
-### Dashboard protegido (requiere autenticación)
-
-| Módulo         | Archivo                | Descripción                                                 |
-| -------------- | ---------------------- | ----------------------------------------------------------- |
-| Dashboard      | `DashboardPage.jsx`    | Estadísticas: citas del día, mascotas, ingresos, stock bajo |
-| Mascotas       | `MascotasPage.jsx`     | CRUD con filtros Todas/Activas/Inactivas y estado visual    |
-| Citas          | `CitasPage.jsx`        | Agenda médica con filtro por estado                         |
-| Propietarios   | `PropietariosPage.jsx` | Registro de dueños con activar/desactivar                   |
-| Veterinarios   | `OtherPages.jsx`       | Personal médico con estado                                  |
-| Especialidades | `OtherPages.jsx`       | Catálogo de áreas médicas                                   |
-| Especies       | `OtherPages.jsx`       | Tipos de animales atendidos                                 |
-| Medicamentos   | `OtherPages.jsx`       | Inventario con alerta de stock bajo                         |
-| Facturas       | `OtherPages.jsx`       | Registro financiero con crear/editar/eliminar               |
-| Consultas SQL  | `OtherPages.jsx`       | 20 queries predefinidas + editor libre                      |
-| Usuarios       | `OtherPages.jsx`       | Gestión de accesos (solo SUPERADMIN)                        |
+| Página         | Archivo                | Descripción                                              |
+| -------------- | ---------------------- | -------------------------------------------------------- |
+| Login          | `LoginPage.jsx`        | Autenticación con cuentas de demo clickeables            |
+| Dashboard      | `DashboardPage.jsx`    | Estadísticas generales: citas, mascotas, ingresos, stock |
+| Mascotas       | `MascotasPage.jsx`     | CRUD completo de pacientes                               |
+| Citas          | `CitasPage.jsx`        | Agenda médica con filtros por estado                     |
+| Propietarios   | `PropietariosPage.jsx` | Registro de dueños de mascotas                           |
+| Veterinarios   | `OtherPages.jsx`       | Personal médico de la clínica                            |
+| Especialidades | `OtherPages.jsx`       | Catálogo de áreas médicas                                |
+| Especies       | `OtherPages.jsx`       | Tipos de animales atendidos                              |
+| Medicamentos   | `OtherPages.jsx`       | Inventario con alertas de stock bajo                     |
+| Facturas       | `OtherPages.jsx`       | Registro financiero de citas atendidas                   |
+| Consultas SQL  | `OtherPages.jsx`       | 20 queries predefinidas + editor libre                   |
+| Usuarios       | `OtherPages.jsx`       | Gestión de accesos (solo SUPERADMIN)                     |
 
 ---
 
-## 6. Roles y permisos
+## 6. Sistema de roles y permisos
 
-### Sidebar visible por rol
+Los roles son **jerárquicos**: SUPERADMIN hereda todo, ADMIN hereda USUARIO y CONSULTA. El sidebar muestra solo las páginas accesibles según el rol del usuario.
 
-| Módulo         | SUPERADMIN | ADMIN | USUARIO | CONSULTA |
-| -------------- | :--------: | :---: | :-----: | :------: |
-| Dashboard      |     ✅     |  ✅   |   ✅    |    ✅    |
-| Citas          |     ✅     |  ✅   |   ✅    |    ✅    |
-| Mascotas       |     ✅     |  ✅   |   ✅    |    ✅    |
-| Propietarios   |     ✅     |  ✅   |    —    |    ✅    |
-| Veterinarios   |     ✅     |  ✅   |   ✅    |    ✅    |
-| Especialidades |     ✅     |  ✅   |   ✅    |    ✅    |
-| Especies       |     ✅     |  ✅   |   ✅    |    ✅    |
-| Medicamentos   |     ✅     |  ✅   |    —    |    ✅    |
-| Facturas       |     ✅     |  ✅   |    —    |    ✅    |
-| Consultas SQL  |     ✅     |  ✅   |    —    |    ✅    |
-| Usuarios       |     ✅     |   —   |    —    |    —     |
+| Acción                                                        | CONSULTA | USUARIO | ADMIN | SUPERADMIN |
+| ------------------------------------------------------------- | :------: | :-----: | :---: | :--------: |
+| Ver mascotas, propietarios, citas, veterinarios, medicamentos |    ✅    |   ✅    |  ✅   |     ✅     |
+| Crear mascotas y propietarios                                 |    —     |   ✅    |  ✅   |     ✅     |
+| Agendar y cancelar citas                                      |    —     |   ✅    |  ✅   |     ✅     |
+| Editar mascotas, propietarios, veterinarios, medicamentos     |    —     |    —    |  ✅   |     ✅     |
+| Marcar cita como ATENDIDA                                     |    —     |    —    |  ✅   |     ✅     |
+| Desactivar mascotas (borrado lógico)                          |    —     |    —    |  ✅   |     ✅     |
+| Crear/editar especialidades y especies                        |    —     |    —    |  ✅   |     ✅     |
+| Ver facturas                                                  |    —     |    —    |  ✅   |     ✅     |
+| Eliminar especialidades                                       |    —     |    —    |  ❌   |     ✅     |
+| Gestionar usuarios del sistema                                |    —     |    —    |  ❌   |     ✅     |
+| Consultas SQL predefinidas y editor libre                     |    ✅    |   ✅    |  ✅   |     ✅     |
 
-### Acciones por rol en tablas
+La función `can(rol)` del `AuthContext` compara niveles numéricos:
 
-| Acción                                       | CONSULTA | USUARIO | ADMIN | SUPERADMIN |
-| -------------------------------------------- | :------: | :-----: | :---: | :--------: |
-| Ver registros                                |    ✅    |   ✅    |  ✅   |     ✅     |
-| Crear mascotas propias                       |    —     |   ✅    |  ✅   |     ✅     |
-| Agendar y cancelar citas propias             |    —     |   ✅    |  ✅   |     ✅     |
-| Crear/editar propietarios, vet, medicamentos |    —     |    —    |  ✅   |     ✅     |
-| Marcar cita como ATENDIDA                    |    —     |    —    |  ✅   |     ✅     |
-| **Desactivar** registros (borrado lógico)    |    —     |    —    |  ✅   |     ✅     |
-| **Activar** registros desactivados           |    —     |    —    |  ✅   |     ✅     |
-| **Eliminar** permanente de la BD             |    —     |    —    |   —   |     ✅     |
-| Editor SQL sin restricciones                 |    —     |    —    |   —   |     ✅     |
-| Gestionar usuarios                           |    —     |    —    |   —   |     ✅     |
-
-### Comportamiento especial de USUARIO
-
-- Ve **solo sus propias mascotas** (vinculadas por email del propietario)
-- Ve **solo sus propias citas**
-- Al registrarse, se crea automáticamente un propietario a su nombre
-- Al crear una mascota, se asigna automáticamente a su propietario
-- Su Dashboard muestra solo sus estadísticas personales
-
-### Comportamiento especial de CONSULTA
-
-- Ve el sidebar completo pero sin ningún botón de acción
-- No aparece columna "Acciones" en ninguna tabla
-- Puede ejecutar consultas SQL pero solo SELECT
+```js
+const ROL_LEVEL = { CONSULTA: 1, USUARIO: 2, ADMIN: 3, SUPERADMIN: 4 };
+```
 
 ---
 
@@ -209,11 +170,11 @@ proxy: {
 
 | Username     | Rol        | Descripción                            |
 | ------------ | ---------- | -------------------------------------- |
-| `superadmin` | SUPERADMIN | Acceso total, elimina permanentemente  |
-| `admin`      | ADMIN      | CRUD operativo, facturas, desactiva    |
+| `superadmin` | SUPERADMIN | Acceso total, gestión de usuarios      |
+| `admin`      | ADMIN      | CRUD operativo, facturas, reportes     |
 | `dr_ana`     | ADMIN      | CRUD operativo (veterinaria vinculada) |
-| `usuario`    | USUARIO    | Solo sus mascotas y citas              |
-| `consulta`   | CONSULTA   | Solo lectura y SQL                     |
+| `usuario`    | USUARIO    | Crear mascotas, propietarios y citas   |
+| `consulta`   | CONSULTA   | Solo lectura y consultas SQL           |
 
 En la pantalla de login hay botones de acceso rápido para cada cuenta de demo.
 
@@ -224,156 +185,139 @@ En la pantalla de login hay botones de acceso rápido para cada cuenta de demo.
 > SET password_hash = '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
 > WHERE username IN ('superadmin', 'admin', 'dr_ana', 'usuario', 'consulta');
 > ```
+>
+> Este hash corresponde a la contraseña `password`.
 
 ---
 
 ## 8. Validaciones de formularios
 
-La validación funciona en **dos niveles**:
+La validación funciona en dos niveles:
 
-**Nivel 1 — Bloqueo en `onKeyDown`:** el carácter inválido nunca llega al input. Las teclas de control (`Backspace`, `Delete`, `Tab`, flechas, `Ctrl+C`, `Ctrl+V`) siempre se permiten. Mantener una tecla presionada solo escribe un carácter (bloqueado con `e.repeat`), excepto `Backspace` y `Delete` que sí se repiten.
+**1. Bloqueo en `onKeyDown`** — el carácter inválido nunca llega al input, sin importar cuánto tiempo se mantenga presionada la tecla. Las teclas de control (`Backspace`, `Delete`, `Tab`, flechas, `Ctrl+C`, `Ctrl+V`, `Ctrl+A`) siempre se permiten.
 
-**Nivel 2 — Validación en submit:** al intentar guardar, se validan todas las reglas y se muestran los errores en rojo debajo de cada campo. El banner de error solo aparece después de presionar Guardar por primera vez.
+**2. Validación en submit** — al intentar guardar, se validan todas las reglas y se muestran los errores en rojo debajo de cada campo.
 
-| Campo                        | Patrón permitido               | Bloquea                  |
-| ---------------------------- | ------------------------------ | ------------------------ |
-| Cédula                       | Solo dígitos, 6–12 caracteres  | Letras, símbolos         |
-| Nombres / Apellidos / Ciudad | Letras y espacios (tildes, ñ)  | Números, símbolos        |
-| Teléfono                     | Solo dígitos, 7–15 caracteres  | Letras, símbolos         |
-| Email                        | Formato `usuario@dominio.ext`  | Formatos inválidos       |
-| Contraseña                   | Mínimo 6 caracteres            | Contraseñas cortas       |
-| Peso / Precio                | Dígitos y un punto decimal     | Letras, múltiples puntos |
-| Stock                        | Solo dígitos enteros positivos | Letras, decimales        |
-| Nombre de mascota            | Letras, números y espacios     | Símbolos especiales      |
-| Username (registro)          | Letras, números, `.`, `-`, `_` | Espacios, símbolos       |
+| Campo                        | Patrón permitido                       | Bloquea                      |
+| ---------------------------- | -------------------------------------- | ---------------------------- |
+| Cédula                       | Solo dígitos, 6–12 caracteres          | Letras, símbolos, espacios   |
+| Nombres / Apellidos / Ciudad | Letras y espacios (tildes, ñ)          | Números, símbolos            |
+| Teléfono                     | Solo dígitos, 7–15 caracteres          | Letras, símbolos             |
+| Email                        | Formato estricto `usuario@dominio.ext` | `t@`, `abc@`, `@gmail.com`   |
+| Contraseña                   | Mínimo 8 caracteres                    | Contraseñas cortas           |
+| Peso / Precio                | Dígitos y un punto decimal             | Letras, múltiples puntos     |
+| Stock                        | Solo dígitos enteros positivos         | Letras, decimales, negativos |
+| Nombres de catálogos         | Letras y espacios                      | Números, símbolos            |
+
+Los patrones se definen en `src/services/validation.js` y se pasan al componente `Input` mediante el prop `allowPattern`:
+
+```js
+// Ejemplo de uso en un formulario
+<Input
+  label="Cédula *"
+  value={form.cedula}
+  error={errors.cedula}
+  allowPattern={PATTERNS.soloNumeros} // /^\d$/
+  maxLength={12}
+  onChange={(e) => set("cedula", e.target.value)}
+/>
+```
 
 ---
 
-## 9. Sistema de temas
+## 9. Consultas SQL
 
-El toggle de tema es un **botón circular flotante** en la esquina inferior derecha, visible en todas las páginas (públicas y dashboard).
+El módulo **Consultas SQL** está disponible para todos los roles desde el sidebar.
 
-- 🌙 en tema claro → al hacer click cambia a oscuro
-- ☀️ en tema oscuro → al hacer click cambia a claro
-- Guarda la preferencia en `localStorage`
-- Respeta el tema del sistema operativo la primera vez
-- La transición es suave (0.25s) en todos los elementos
+### 20 consultas predefinidas
 
-### Modificar colores
+| #   | Consulta                                    |
+| --- | ------------------------------------------- |
+| Q1  | Historial clínico completo de mascota ID 1  |
+| Q2  | Medicamentos recetados en consulta ID 1     |
+| Q3  | Agenda de citas del día de hoy              |
+| Q4  | Ingresos totales agrupados por mes          |
+| Q5  | Veterinario con más citas atendidas         |
+| Q6  | Medicamentos con stock bajo (< 20 unidades) |
+| Q7  | Conteo de mascotas activas por especie      |
+| Q8  | Propietarios con sus mascotas activas       |
+| Q9  | Citas pendientes en los próximos 7 días     |
+| Q10 | Resumen financiero general                  |
+| Q11 | Todas las citas con detalle completo        |
+| Q12 | Todas las consultas médicas registradas     |
+| Q13 | Todos los tratamientos con medicamentos     |
+| Q14 | Facturas pagadas vs pendientes              |
+| Q15 | Mascotas sin citas en los últimos 30 días   |
+| Q16 | Propietarios con cantidad de mascotas       |
+| Q17 | Citas canceladas o con no asistencia        |
+| Q18 | Medicamentos más recetados                  |
+| Q19 | Listado de usuarios del sistema             |
+| Q20 | Ingresos totales por veterinario            |
 
-Los colores de cada tema se definen en `src/index.css`:
+### Editor SQL libre
 
-```css
-/* Tema claro (por defecto) */
-:root {
-  --background: #edf2e8;
-  --foreground: #08211b;
-  --ink:        /* texto principal */ --ink-soft: /* texto secundario */
-    --surface: /* fondo de cards */ --accent: /* color verde principal */
-    --sidebar-bg: /* fondo del sidebar */
-    --sidebar-text: /* texto del sidebar */;
-}
-
-/* Tema oscuro */
-[data-theme="dark"] {
-  --background: #1a2622;
-  --foreground: #e2ebd9;
-  /* ... mismas variables con valores oscuros */
-}
-```
-
-Para cambiar el color de los títulos del navbar público, editar directamente `src/components/public/Navbar.jsx` — los colores están en los estilos inline usando `var(--foreground)` y `var(--ink)`.
+- Escribir cualquier `SELECT` personalizado en el editor de texto
+- `Ctrl+Enter` para ejecutar
+- Los resultados se muestran en tabla con formato de fechas y monedas colombianas
+- Las sentencias `DROP`, `DELETE`, `UPDATE`, `INSERT`, `ALTER` y similares están bloqueadas por seguridad
 
 ---
 
 ## 10. Componentes reutilizables
 
-Todos los componentes del dashboard están en `src/components/ui.jsx`.
+Todos los componentes están en `src/components/ui.jsx`.
 
-| Componente            | Props principales                             | Descripción                                          |
-| --------------------- | --------------------------------------------- | ---------------------------------------------------- |
-| `Badge`               | `label`, `variant`                            | Etiqueta coloreada (green, red, blue, purple, gray…) |
-| `Btn`                 | `variant`, `size`, `disabled`, `fullWidth`    | Botón: primary, secondary, danger, ghost             |
-| `Card`                | `style`                                       | Contenedor con borde y sombra                        |
-| `StatCard`            | `icon`, `label`, `value`, `variant`           | Tarjeta de estadística para Dashboard                |
-| `Input`               | `label`, `error`, `allowPattern`, `maxLength` | Campo con bloqueo de teclas y error visual           |
-| `Select`              | `label`, `error`                              | Selector con error visual                            |
-| `Modal`               | `title`, `onClose`, `width`                   | Ventana modal via **React Portal** (no se corta)     |
-| `Table`               | `headers`, `rows`                             | Tabla responsive con hover                           |
-| `PageHeader`          | `title`, `action`                             | Cabecera de sección                                  |
-| `Spinner`             | —                                             | Indicador de carga                                   |
-| `SearchInput`         | `value`, `onChange`, `placeholder`            | Campo de búsqueda                                    |
-| `Alert`               | `message`, `variant`                          | Mensaje de error o advertencia                       |
-| `FormRow` / `FormCol` | —                                             | Layout de formulario en columnas                     |
-| `PATTERNS`            | —                                             | RegExp exportadas para `allowPattern`                |
-| `ESTADO_BADGE`        | —                                             | Mapa estado → variante de badge                      |
-| `ROL_BADGE`           | —                                             | Mapa rol → variante de badge                         |
+| Componente    | Props principales                             | Descripción                                           |
+| ------------- | --------------------------------------------- | ----------------------------------------------------- |
+| `Badge`       | `label`, `variant`                            | Etiqueta de colores (green, red, blue, purple…)       |
+| `Btn`         | `variant`, `size`, `disabled`, `fullWidth`    | Botón con variantes primary, secondary, danger, ghost |
+| `Card`        | `style`                                       | Contenedor con borde y sombra                         |
+| `StatCard`    | `icon`, `label`, `value`, `variant`           | Tarjeta de estadística para el dashboard              |
+| `Input`       | `label`, `error`, `allowPattern`, `maxLength` | Campo con bloqueo de caracteres y validación visual   |
+| `Select`      | `label`, `error`                              | Selector con validación visual                        |
+| `Modal`       | `title`, `onClose`, `width`                   | Ventana modal centrada con animación                  |
+| `Table`       | `headers`, `rows`                             | Tabla responsive con hover                            |
+| `PageHeader`  | `title`, `action`                             | Cabecera de página con botón de acción                |
+| `Spinner`     | —                                             | Indicador de carga                                    |
+| `SearchInput` | `value`, `onChange`, `placeholder`            | Campo de búsqueda con ícono                           |
+| `Alert`       | `message`, `variant`                          | Mensaje de error o advertencia                        |
+| `FormRow`     | —                                             | Contenedor flex para campos en fila                   |
+| `FormCol`     | —                                             | Columna flexible dentro de FormRow                    |
+| `PATTERNS`    | —                                             | Objeto con RegExp exportadas para `allowPattern`      |
 
-### Por qué Modal usa React Portal
+### Patrones disponibles (`PATTERNS`)
 
-El `<main>` del layout tiene `overflowY: auto`, lo que crea un **stacking context** que atrapa `position: fixed`. Sin el Portal, el modal queda fijo relativo al `<main>` y se corta. Con `createPortal(content, document.body)`, el modal se renderiza fuera del árbol del layout, directamente en `<body>`, y se ve completo siempre.
+```js
+PATTERNS.soloLetras; // /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]$/
+PATTERNS.soloNumeros; // /^\d$/
+PATTERNS.alfanumerico; // /^[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ\s]$/
+PATTERNS.decimal; // /^[\d.]$/
+PATTERNS.email; // /^[a-zA-Z0-9._%+\-@]$/
+PATTERNS.direccion; // /^[a-zA-Z0-9áéíóúüñÁÉÍÓÚÜÑ\s#/\-.]$/
+```
 
 ### Hook `useFetch`
 
 ```js
-const { data, loading, error, refetch } = useFetch("/mascotas?activa=todas", [
-  filtro,
-]);
+const { data, loading, error, refetch } = useFetch("/mascotas", [search]);
 ```
 
-- Recibe el path y un array de dependencias
-- Usa un contador `tick` interno para garantizar que `refetch()` siempre recarga, incluso si el path no cambió
-- `pathRef` se actualiza en cada render para capturar el path más reciente
+- `data` — resultado de la petición
+- `loading` — booleano mientras carga
+- `error` — mensaje de error si falló
+- `refetch` — función para volver a cargar manualmente
 
 ### Servicio `api.js`
 
 ```js
-api.get("/mascotas");
-api.post("/mascotas", body);
-api.put("/mascotas/1", body);
-api.patch("/mascotas/1/desactivar", {});
-api.del("/mascotas/1");
+api.get("/mascotas"); // GET
+api.post("/mascotas", body); // POST
+api.put("/mascotas/1", body); // PUT
+api.patch("/mascotas/1/desactivar", {}); // PATCH
+api.del("/especialidades/1"); // DELETE
 ```
 
-El token JWT se adjunta automáticamente en `Authorization: Bearer ...` en cada petición.
-
----
-
-## 11. Consultas SQL
-
-El módulo **Consultas SQL** está disponible para SUPERADMIN, ADMIN y CONSULTA.
-
-### 20 consultas predefinidas
-
-| #       | Consulta                                |
-| ------- | --------------------------------------- |
-| Q1      | Historial clínico de mascota            |
-| Q2      | Medicamentos por consulta               |
-| Q3      | Agenda de citas del día                 |
-| Q4      | Ingresos totales por mes                |
-| Q5      | Veterinario con más citas atendidas     |
-| Q6      | Medicamentos con stock bajo (< 20)      |
-| Q7      | Mascotas activas por especie            |
-| Q8      | Propietarios con sus mascotas           |
-| Q9      | Citas pendientes próximos 7 días        |
-| Q10     | Resumen financiero general              |
-| Q11     | Todas las citas con detalle completo    |
-| Q12     | Todas las consultas médicas             |
-| Q13     | Todos los tratamientos con medicamentos |
-| Q14     | Facturas pagadas vs pendientes          |
-| Q15     | Mascotas sin citas en 30 días           |
-| Q16     | Propietarios con cantidad de mascotas   |
-| Q17     | Citas canceladas o no asistidas         |
-| Q18     | Medicamentos más recetados              |
-| Q19     | Listado de usuarios del sistema         |
-| Q20     | Ingresos por veterinario                |
-| 🔒 DEMO | DROP TABLE mascotas (bloqueado)         |
-| 🔒 DEMO | DELETE FROM mascotas (bloqueado)        |
-| 🔒 DEMO | UPDATE mascotas (bloqueado)             |
-| 🔒 DEMO | TRUNCATE facturas (bloqueado)           |
-| 🔒 DEMO | INSERT usuario falso (bloqueado)        |
-
-Las consultas demo muestran que el sistema bloquea sentencias peligrosas para todos los roles excepto SUPERADMIN. SUPERADMIN ve la etiqueta **"Modo SUPERADMIN — acceso total"** y puede ejecutar cualquier SQL.
+El token JWT se adjunta automáticamente en el header `Authorization: Bearer ...` en cada petición.
 
 ---
 
