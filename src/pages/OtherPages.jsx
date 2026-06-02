@@ -153,7 +153,7 @@ export function EspecialidadesPage() {
   const openCreate = () => { setEditing(null); setForm({ nombre: '', descripcion: '' }); setErrors({}); setApiError(''); setShowModal(true) }
   const openEdit = (e) => { setEditing(e); setForm({ nombre: e.nombre, descripcion: e.descripcion ?? '' }); setErrors({}); setApiError(''); setShowModal(true) }
   const handleSave = async () => {
-    const errs = validate(form, { nombre: [rules.required, rules.soloLetras, rules.minLen(3), rules.maxLen(100)] })
+    const errs = validate(form, { nombre: [rules.required, rules.soloLetras, rules.nombreReal, rules.minLen(3), rules.maxLen(100)] })
     if (Object.keys(errs).length) { setErrors(errs); return }
     setSaving(true); setApiError('')
     try {
@@ -219,7 +219,7 @@ export function EspeciesPage() {
   const openCreate = () => { setEditing(null); setForm({ nombre: '', descripcion: '' }); setErrors({}); setApiError(''); setShowModal(true) }
   const openEdit = (e) => { setEditing(e); setForm({ nombre: e.nombre, descripcion: e.descripcion ?? '' }); setErrors({}); setApiError(''); setShowModal(true) }
   const handleSave = async () => {
-    const errs = validate(form, { nombre: [rules.required, rules.soloLetras, rules.minLen(2), rules.maxLen(80)] })
+    const errs = validate(form, { nombre: [rules.required, rules.soloLetras, rules.nombreReal, rules.minLen(2), rules.maxLen(80)] })
     if (Object.keys(errs).length) { setErrors(errs); return }
     setSaving(true); setApiError('')
     try {

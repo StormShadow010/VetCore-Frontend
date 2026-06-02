@@ -5,8 +5,34 @@ export const rules = {
 
   soloLetras: (v) => {
     if (!v) return ''
-    return /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]+$/.test(v)
-      ? '' : 'Solo se permiten letras y espacios'
+    if (!/^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]+$/.test(v)) return 'Solo se permiten letras y espacios'
+    return ''
+  },
+
+  // Valida que un nombre (persona, ciudad, etc.) sea real y no basura
+  nombreReal: (v) => {
+    if (!v || !v.trim()) return ''
+    const s = v.trim().toLowerCase()
+
+    // Debe tener al menos una vocal
+    const VOCALES = /[aeiouáéíóúü]/i
+    if (!VOCALES.test(s)) return 'Ingresa un nombre válido'
+
+    // No puede tener más de 3 consonantes seguidas sin vocal (evita "sdfghj", "asdasd")
+    const CONSONANTES_SEQ = /[^aeiouáéíóúü\s]{4,}/i
+    if (CONSONANTES_SEQ.test(s)) return 'Ingresa un nombre válido'
+
+    // No puede ser la misma letra repetida ("aaaa", "bbbbb")
+    if (/^(.)\1+$/.test(s.replace(/\s/g, ''))) return 'Ingresa un nombre válido'
+
+    // No puede tener el mismo bloque de letras repetido ("asas", "abab", "adadad")
+    if (/^(.{1,4})\1{2,}$/.test(s.replace(/\s/g, ''))) return 'Ingresa un nombre válido'
+
+    // Mínimo debe tener 2 letras distintas
+    const letrasUnicas = new Set(s.replace(/[\s]/g, '').split(''))
+    if (letrasUnicas.size < 2) return 'Ingresa un nombre válido'
+
+    return ''
   },
 
   soloNumeros: (v) => {

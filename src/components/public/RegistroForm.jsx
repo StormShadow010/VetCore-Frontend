@@ -48,8 +48,12 @@ export default function RegistroForm() {
     const errs = {}
     if (!form.nombres.trim()) errs.nombres = 'Los nombres son obligatorios'
     else if (form.nombres.trim().length < 2) errs.nombres = 'Mínimo 2 caracteres'
+    else if (!/[aeiouáéíóúü]/i.test(form.nombres)) errs.nombres = 'Ingresa un nombre válido'
+    else if (/[^aeiouáéíóúü\s]{4,}/i.test(form.nombres)) errs.nombres = 'Ingresa un nombre válido'
     if (!form.apellidos.trim()) errs.apellidos = 'Los apellidos son obligatorios'
     else if (form.apellidos.trim().length < 2) errs.apellidos = 'Mínimo 2 caracteres'
+    else if (!/[aeiouáéíóúü]/i.test(form.apellidos)) errs.apellidos = 'Ingresa un nombre válido'
+    else if (/[^aeiouáéíóúü\s]{4,}/i.test(form.apellidos)) errs.apellidos = 'Ingresa un nombre válido'
     if (!form.username.trim()) errs.username = 'El usuario es obligatorio'
     else if (form.username.trim().length < 3) errs.username = 'Mínimo 3 caracteres'
     else if (!/^[a-zA-Z0-9._-]+$/.test(form.username)) errs.username = 'Solo letras, números, puntos y guiones'

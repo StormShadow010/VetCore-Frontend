@@ -6,7 +6,7 @@ import { validate, rules } from '../services/validation'
 import { PageHeader, Card, Table, Badge, Btn, Modal, Input, Select, SearchInput, Spinner, Alert, FormRow, FormCol, PATTERNS } from '../components/ui'
 
 const SCHEMA_BASE = {
-  nombre:     [rules.required, rules.minLen(2), rules.maxLen(80)],
+  nombre:     [rules.required, rules.minLen(2), rules.maxLen(80), rules.nombreReal],
   id_especie: [rules.selectRequerido],
   peso_kg: [(v) => {
     if (!v || v === '') return ''
