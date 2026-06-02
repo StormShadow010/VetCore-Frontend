@@ -6,10 +6,30 @@ import { validate, rules } from '../services/validation'
 import { PageHeader, Card, Table, Badge, Btn, Modal, Input, Select, SearchInput, Spinner, Alert, ESTADO_BADGE } from '../components/ui'
 
 const EMPTY = { id_mascota: '', id_veterinario: '', fecha_hora: '', motivo: '', observaciones: '' }
+
+// Fecha mínima: hoy a las 00:00 en formato YYYY-MM-DDTHH:mm (para el atributo min del input)
+const getTodayMin = () => {
+  const now = new Date()
+  const yyyy = now.getFullYear()
+  const mm   = String(now.getMonth() + 1).padStart(2, '0')
+  const dd   = String(now.getDate()).padStart(2, '0')
+  const hh   = String(now.getHours()).padStart(2, '0')
+  const min  = String(now.getMinutes()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`
+}
 const SCHEMA = {
   id_mascota:     [rules.selectRequerido],
   id_veterinario: [rules.selectRequerido],
-  fecha_hora:     [rules.fechaHora],
+  fecha_hora: [
+    rules.fechaHora,
+    (v) => {
+      if (!v) return ''
+      const selected = new Date(v)
+      const now      = new Date()
+      if (selected <= now) return 'La fecha debe ser posterior a la fecha y hora actual'
+      return ''
+    },
+  ],
 }
 
 export default function CitasPage() {
@@ -128,7 +148,7 @@ export default function CitasPage() {
               <option value="">Seleccionar…</option>
               {(veterinarios ?? []).map(v => <option key={v.id_veterinario} value={v.id_veterinario}>{v.nombres} {v.apellidos} — {v.especialidad_nombre}</option>)}
             </Select>
-            <Input label="Fecha y hora *" type="datetime-local" value={form.fecha_hora} error={errors.fecha_hora} onChange={e => set('fecha_hora', e.target.value)} />
+            <Input label="Fecha y hora *" type="datetime-local" value={form.fecha_hora} error={errors.fecha_hora} onChange={e => set('fecha_hora', e.target.value)} min={getTodayMin()} />
             <Input label="Motivo" value={form.motivo} maxLength={200} onChange={e => set('motivo', e.target.value)} placeholder="Vacunación, revisión general…" />
             <Input label="Observaciones" value={form.observaciones} maxLength={500} onChange={e => set('observaciones', e.target.value)} />
             {apiError && <Alert message={apiError} />}
