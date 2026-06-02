@@ -13,8 +13,8 @@ const fmt = (n) => new Intl.NumberFormat('es-CO', { style: 'currency', currency:
 /* ── VETERINARIOS ────────────────────────────────────────────── */
 const VET_SCHEMA = {
   cedula:         [rules.cedula],
-  nombres:        [rules.required, rules.soloLetras, rules.minLen(2)],
-  apellidos:      [rules.required, rules.soloLetras, rules.minLen(2)],
+  nombres:        [rules.required, rules.soloLetras, rules.nombreReal, rules.minLen(2)],
+  apellidos:      [rules.required, rules.soloLetras, rules.nombreReal, rules.minLen(2)],
   telefono:       [rules.telefono],
   email:          [rules.emailRequerido],
   id_especialidad:[rules.selectRequerido],
@@ -274,8 +274,10 @@ export function EspeciesPage() {
 /* ── MEDICAMENTOS ────────────────────────────────────────────── */
 const MED_EMPTY = { nombre: '', principio_act: '', presentacion: '', stock: '', precio_unit: '', activo: 'true' }
 const MED_SCHEMA = {
-  nombre:      [rules.required, rules.minLen(2), rules.maxLen(150)],
-  precio_unit: [rules.required, (v) => {
+  nombre:       [rules.required, rules.minLen(2), rules.maxLen(150), rules.nombreReal],
+  principio_act:[(v) => v ? rules.textoLibre(v) : ''],
+  presentacion: [(v) => v ? rules.textoLibre(v) : ''],
+  precio_unit:  [rules.required, (v) => {
     if (!v && v !== 0) return 'El precio es obligatorio'
     const n = Number(v)
     if (isNaN(n)) return 'Debe ser un número válido'
@@ -566,7 +568,7 @@ export function FacturasPage() {
 
 /* ── USUARIOS (SUPERADMIN) ───────────────────────────────────── */
 const USR_SCHEMA_CREATE = {
-  username: [rules.required, rules.minLen(3), rules.maxLen(60)],
+  username: [rules.required, rules.minLen(3), rules.maxLen(60), rules.usernameValido],
   email:    [rules.emailRequerido],
   password: [rules.password],
   rol:      [rules.selectRequerido],

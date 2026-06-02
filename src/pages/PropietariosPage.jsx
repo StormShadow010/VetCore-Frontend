@@ -9,9 +9,11 @@ const EMPTY = { cedula: '', nombres: '', apellidos: '', telefono: '', email: '',
 const SCHEMA = {
   cedula:    [rules.cedula],
   nombres:   [rules.required, rules.soloLetras, rules.nombreReal, rules.minLen(2), rules.maxLen(100)],
-  apellidos: [rules.required, rules.soloLetras, rules.minLen(2), rules.maxLen(100)],
+  apellidos: [rules.required, rules.soloLetras, rules.nombreReal, rules.minLen(2), rules.maxLen(100)],
   telefono:  [rules.telefono],
   email:     [rules.email],
+  ciudad:    [(v) => v ? rules.textoLibre(v) : ''],
+  direccion: [(v) => v ? rules.textoLibre(v) : ''],
 }
 
 export default function PropietariosPage() {

@@ -7,6 +7,19 @@ import { PageHeader, Card, Table, Badge, Btn, Modal, Input, Select, SearchInput,
 
 const SCHEMA_BASE = {
   nombre:     [rules.required, rules.minLen(2), rules.maxLen(80), rules.nombreReal],
+  raza:       [(v) => {
+    if (!v || !v.trim()) return ''
+    if (v.trim().length < 2) return 'Mínimo 2 caracteres'
+    if (!/[aeiouáéíóúü]/i.test(v)) return 'Ingresa una raza válida'
+    if (/[^aeiouáéíóúü\s]{4,}/i.test(v)) return 'Ingresa una raza válida'
+    return ''
+  }],
+  color:      [(v) => {
+    if (!v || !v.trim()) return ''
+    if (!/[aeiouáéíóúü]/i.test(v)) return 'Ingresa un color válido'
+    if (/[^aeiouáéíóúü\s]{4,}/i.test(v)) return 'Ingresa un color válido'
+    return ''
+  }],
   id_especie: [rules.selectRequerido],
   peso_kg: [(v) => {
     if (!v || v === '') return ''

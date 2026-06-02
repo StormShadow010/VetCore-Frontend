@@ -20,6 +20,14 @@ const getTodayMin = () => {
 const SCHEMA = {
   id_mascota:     [rules.selectRequerido],
   id_veterinario: [rules.selectRequerido],
+  observaciones: [(v) => v ? rules.textoLibre(v) : ''],
+  motivo: [(v) => {
+    if (!v || !v.trim()) return ''
+    if (v.trim().length < 3) return 'Mínimo 3 caracteres'
+    if (!/[aeiouáéíóúü]/i.test(v)) return 'Ingresa un motivo válido'
+    if (/(.){4,}/.test(v.toLowerCase())) return 'Ingresa un motivo válido'
+    return ''
+  }],
   fecha_hora: [
     rules.fechaHora,
     (v) => {

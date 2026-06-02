@@ -57,6 +57,8 @@ export default function RegistroForm() {
     if (!form.username.trim()) errs.username = 'El usuario es obligatorio'
     else if (form.username.trim().length < 3) errs.username = 'Mínimo 3 caracteres'
     else if (!/^[a-zA-Z0-9._-]+$/.test(form.username)) errs.username = 'Solo letras, números, puntos y guiones'
+    else if (!/[a-zA-Z]/.test(form.username)) errs.username = 'El usuario debe contener al menos una letra'
+    else if (/(.){4,}/.test(form.username.toLowerCase())) errs.username = 'Ingresa un usuario válido'
     if (!form.email.trim()) errs.email = 'El correo es obligatorio'
     else if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(form.email)) errs.email = 'Correo no válido'
     if (!form.password) errs.password = 'La contraseña es obligatoria'

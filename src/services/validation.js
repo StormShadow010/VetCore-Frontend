@@ -96,6 +96,25 @@ export const rules = {
 
   fechaHora: (v) => (!v || !v.trim()) ? 'La fecha y hora son obligatorias' : '',
 
+  // Texto libre: no puede ser pura basura sin vocales ni repeticiones absurdas
+  textoLibre: (v) => {
+    if (!v || !v.trim()) return ''
+    const s = v.trim()
+    if (s.length < 3) return ''  // muy corto, minLen lo maneja
+    if (!/[aeiouáéíóúü0-9]/i.test(s)) return 'Ingresa un texto válido'
+    if (/(.){5,}/.test(s.toLowerCase())) return 'Ingresa un texto válido'
+    return ''
+  },
+
+  // Username: sin basura de teclas
+  usernameValido: (v) => {
+    if (!v || !v.trim()) return ''
+    if (!/[a-zA-Z]/.test(v)) return 'El usuario debe contener al menos una letra'
+    if (/(.){4,}/.test(v.toLowerCase())) return 'Ingresa un usuario válido'
+    if (/^[^aeiou]{8,}$/i.test(v)) return 'Ingresa un usuario válido'
+    return ''
+  },
+
   minLen: (min) => (v) => {
     if (!v) return ''
     return v.trim().length >= min ? '' : `Mínimo ${min} caracteres`
